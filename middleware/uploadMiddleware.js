@@ -1,5 +1,5 @@
 import cloudinary from "cloudinary";
-import multer from "multer";
+import multer from 'multer';
 import { config } from "dotenv";
 
 config();
@@ -33,6 +33,7 @@ const uploadImage = (req, res, next) => {
                 { resource_type: "image" },
                 (error, result) => {
                     if (error) {
+                        console.log(error,"error");
                         return res.status(500).json({ message: "Cloudinary upload failed", error });
                     }
 

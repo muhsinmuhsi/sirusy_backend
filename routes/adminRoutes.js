@@ -1,9 +1,9 @@
 import express from 'express';
-import { adminAddProduct } from '../controlles/adminProductControlles';
-import uploadImage from '../middleware/uploadMiddleware';
+import uploadImage from '../middleware/uploadMiddleware.js';
+import { adminAddProduct } from '../controllers/adminProductControlles.js';
 
 const route=express.Router()
 
-route.post('/products',uploadImage,adminAddProduct)
+route.post('/products',uploadImage,adminAddProduct);
 
 export default route;
