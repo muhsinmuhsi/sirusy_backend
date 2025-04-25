@@ -1,3 +1,5 @@
+import bannerImage from "../Models/bannerImage.js";
+import category from "../Models/category.js";
 import product from "../Models/product.js";
 
 export const viewProduct = async (req, res) => {
@@ -65,3 +67,47 @@ export const viewProduct = async (req, res) => {
     res.status(200).json(products);
   };
   
+
+
+  export const viewCategory = async (req, res) => {
+    try {
+        const categories = await category.find();
+    
+    if (categories.length === 0) {
+        res.status(404).json({message: 'unable to get category'});
+        return; 
+    }
+    
+    res.status(200).json({
+        status: "success", 
+        message: 'successfully fetched data',
+        data: categories
+    });
+    } catch (error) {
+        console.log(error,'error');
+        res.status(500).json({message:'internal server error',error})
+    }
+    
+  };
+
+
+  export const viewBannerImg = async (req, res) => {
+    try {
+        const bannerImages = await bannerImage.find();
+    
+    if (bannerImages.length === 0) {
+        res.status(404).json({message: 'unable to get bannerImages'});
+        return; 
+    }
+    
+    res.status(200).json({
+        status: "success", 
+        message: 'successfully fetched data',
+        data: bannerImages
+    });
+    } catch (error) {
+        res.status(500).json({message:'internal server error',error})
+    }
+    
+  };
+

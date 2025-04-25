@@ -21,6 +21,11 @@ const upload = multer({
 
 // Middleware to upload image
 const uploadImage = (req, res, next) => {
+//     console.log('hiiii form uploadimage');
+//     console.log("Request body:", req.body);
+// console.log("Image URL from Cloudinary:", req.cloudinaryImageUrl);
+
+    
     // Use the multer upload middleware
     upload.single('image')(req, res, (error) => {
         if (error) {
