@@ -26,10 +26,7 @@ export const viewProduct = async (req, res) => {
   export const productById = async (req, res) => {
     try {
         const productId = req.params.id;
-        const products = await product.findById(productId);
-
-        console.log('this is productbyid');
-        
+        const products = await product.findById(productId);        
     
     if (!products) {
         res.status(404).json({
