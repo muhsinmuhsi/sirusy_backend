@@ -13,7 +13,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 const app=express()
 
 app.use(cors({
-    origin: 'http://localhost:5173',  // frontend URL
+    origin: 'https://backend-wq7c.onrender.com',  
     credentials: true
   }));
 
