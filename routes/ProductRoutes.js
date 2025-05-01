@@ -1,5 +1,5 @@
 import express from 'express';
-import { productByCategory, productById, viewBannerImg, viewCategory, viewProduct } from '../controllers/productControlles.js';
+import { productByCategory, productById , sendEmail, viewBannerImg, viewCategory, viewProduct } from '../controllers/productControlles.js';
 import { payment, verifyPayment } from '../controllers/paymentControllers.js';
 
 const route=express.Router()
@@ -11,6 +11,7 @@ route.post('/payment',payment);
 route.post('/payment/verify',verifyPayment);
 route.get('/category',viewCategory);
 route.get('/bannerImage',viewBannerImg);
+route.post('/sendEmail',sendEmail);
 
 
 export default route;

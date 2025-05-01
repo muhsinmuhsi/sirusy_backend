@@ -1,6 +1,7 @@
 import bannerImage from "../Models/bannerImage.js";
 import category from "../Models/category.js";
 import product from "../Models/product.js";
+import sendOrder from "../uttils/orderMail.js";
 
 export const viewProduct = async (req, res) => {
     try {
@@ -47,12 +48,12 @@ export const viewProduct = async (req, res) => {
 
 
   export const productByCategory = async (req, res) => {
-    const { categoryname } = req.params;
+    const { category } = req.params;
   
     const products = await product.find({
         $or: [
-            { category: { $regex: new RegExp(categoryname, 'i') } },
-            { title: { $regex: new RegExp(categoryname, 'i') } }
+            { category: { $regex: new RegExp(category, 'i') } },
+            { title: { $regex: new RegExp(category, 'i') } }
         ]
     });
   
@@ -108,3 +109,73 @@ export const viewProduct = async (req, res) => {
     
   };
 
+
+  export const sendEmail= async (req,res)=>{
+     const {checkoutItems,totalPrice,shippingInfo,paymentMethod}=req.body;
+    try {
+        const productList = checkoutItems.map(item => `<li>${item.images[0]} ${item.title} - ₹${item.price} x ${item.quantity}</li>`).join('');
+
+        await sendOrder({
+            myEmail:process.env.myEmail,
+      email:shippingInfo.email,
+      subject: "🛒 New Order Placed!",
+      html: `
+      <div style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #e0e0e0;border-radius:10px;font-family:Arial,sans-serif;background-color:#f9f9f9;">
+        <h2 style="color:#2c3e50;text-align:center;">🛍️ Order Confirmation</h2>
+        <p style="font-size:16px;color:#333;"><strong>Name : ${shippingInfo.name || "Customer"},</strong></p>
+        <p style="font-size:14px;color:#555;">Thank you for your order! Here are the details:</p>
+    
+        <table style="width:100%;border-collapse:collapse;margin-top:15px;">
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Payment Method:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">${paymentMethod}</td>
+          </tr>
+        
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Total Amount:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">₹${totalPrice}</td>
+          </tr>
+          
+        </table>
+    
+        <h3 style="margin-top:25px;color:#2c3e50;">📦 Shipping Information</h3>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Email:</strong> ${shippingInfo.email}</p>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Phone:</strong> ${shippingInfo.phone}</p>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Address:</strong> ${shippingInfo.address}</p>
+    
+        <h3 style="margin-top:25px;color:#2c3e50;">🛒 Ordered Items</h3>
+        <ul style="font-size:14px;color:#555;line-height:1.6;">
+          ${productList}
+        </ul>
+    
+      </div>
+    `
+        })
+
+        res.status(200).json({ message: 'Confirmation email sent successfully.' });
+    } catch (error) {
+        console.log(error,'error');
+        return  res.status(400).json({message:'There is an error sending the email. Try again '})
+        
+    }
+  }
+
+
+//   export const subscribeByEmail=async (req,res)=>{
+//     const {email}=req.body;
+//     try {
+
+//         await sendOrder({
+//             myEmail:process.env.myEmail,
+//             email:shippingInfo.email,
+//             subject: "New User Subscribed!",
+//             html: `
+//             <div style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #e0e0e0;border-radius:10px;font-family:Arial,sans-serif;background-color:#f9f9f9;">
+//             <p style="font-size:16px;color:#333;"><strong>Email: ${email},</strong></p>
+//             </div>
+//             `
+//         })
+//     } catch (error) {
+//         return res.status(500).json({message:'internal server error'});
+//     }
+//   }

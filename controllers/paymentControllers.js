@@ -56,13 +56,15 @@ export const verifyPayment = async (req, res) => {
     },
     checkoutItems,
     totalPrice,
-    shippingInfo
+    shippingInfo,
+    paymentMethod
+
   } = req.body;
   
   console.log(razorpay_order_id,razorpay_signature,razorpay_payment_id,'razorapy ');
   
 
-    const productList = checkoutItems.map(item => `<li>${item.title} - ₹${item.price} x ${item.quantity}</li>`).join('');
+    const productList = checkoutItems.map(item => `<li>${item.images[0]} ${item.title} - ₹${item.price} x ${item.quantity}</li>`).join('');
 
   const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET);
   hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
@@ -78,17 +80,47 @@ console.log('hi , this is verifyPayment',shippingInfo.email,process.env.myEmail)
       myEmail:process.env.myEmail,
       email:shippingInfo.email,
       subject: "🛒 New Order Placed!",
-  html: `
-    <h2>🛍 New Order Details</h2>
-    <p><strong>Order ID:</strong> ${razorpay_order_id}</p>
-    <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
-    <p><strong>Total:</strong> ₹${totalPrice}</p>
-    <h3>Items:</h3>
-    <ul>${productList}</ul>
-    <p><strong>Email:</strong> ${shippingInfo.email}</p>
-    <p><strong>Address:</strong>${shippingInfo.address}</p>
-    <h3>Phone:${shippingInfo.phone}</h3>
-  `
+      html: `
+      <div style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #e0e0e0;border-radius:10px;font-family:Arial,sans-serif;background-color:#f9f9f9;">
+        <h2 style="color:#2c3e50;text-align:center;">🛍️ Order Confirmation</h2>
+        <p style="font-size:16px;color:#333;"><strong>Hi ${shippingInfo.name || "Customer"},</strong></p>
+        <p style="font-size:14px;color:#555;">Thank you for your order! Here are the details:</p>
+    
+        <table style="width:100%;border-collapse:collapse;margin-top:15px;">
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Payment Method:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">${paymentMethod}</td>
+          </tr>
+        
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Order ID:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">${razorpay_order_id}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Payment ID:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">${razorpay_payment_id}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Total Amount:</strong></td>
+            <td style="padding:8px;border-bottom:1px solid #ddd;">₹${totalPrice}</td>
+          </tr>
+          
+        </table>
+    
+        <h3 style="margin-top:25px;color:#2c3e50;">📦 Shipping Information</h3>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Email:</strong> ${shippingInfo.email}</p>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Phone:</strong> ${shippingInfo.phone}</p>
+        <p style="font-size:14px;color:#555;margin:5px 0;"><strong>Address:</strong> ${shippingInfo.address}</p>
+    
+        <h3 style="margin-top:25px;color:#2c3e50;">🛒 Ordered Items</h3>
+        <ul style="font-size:14px;color:#555;line-height:1.6;">
+          ${productList}
+        </ul>
+    
+        
+      </div>
+    `
+    
     })
   } catch (error) {
     console.log(error,'error');
