@@ -12,9 +12,22 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 
 const app=express()
 
-app.use(cors({
-    origin: 'https://sirusy.onrender.com',  
-    credentials: true
+const allowedOrigins = [
+    'http://localhost:8080',         // for local dev
+    'https://sirusy.onrender.com',   // Render domain
+    'https://sirusy.com',            // Custom domain
+    'https://www.sirusy.com'        // www version
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true // if using cookies or sessions
   }));
 
 app.use(express.json());
