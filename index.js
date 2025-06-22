@@ -13,7 +13,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 const app=express()
 
 const allowedOrigins = [
-    'http://localhost:8080',         // for local dev
+    'http://localhost:5173',         // for local dev
     'https://sirusy.onrender.com',   // Render domain
     'https://sirusy.com',            // Custom domain
     'https://www.sirusy.com'        // www version
