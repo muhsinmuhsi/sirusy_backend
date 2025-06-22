@@ -47,6 +47,10 @@ const uploadImage = (req, res, next) => {
         next();
       } catch (err) {
         console.log("cloudinary error:",err);
+        console.log("Cloudinary Config:");
+        console.log("Name:", process.env.CLOUD_NAME);
+        console.log("API Key:", process.env.CLOUD_API_KEY);
+        console.log("Secret:", process.env.CLOUD_API_SECRET ? "Exists" : "Missing");
         return res.status(500).json({ message: "Cloudinary upload failed", error: err });
       }
     } else {  
