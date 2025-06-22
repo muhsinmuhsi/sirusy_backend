@@ -6,9 +6,9 @@ config();
 
 // Cloudinary config
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
+  cloud_name: process.env.Cloud_name,
+  api_key: process.env.Cloud_API_key,
+  api_secret: process.env.Cloud_API_secret,
 });
 
 // Multer memory storage
@@ -16,11 +16,12 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
-  limits: { fileSize: 20000000 }, // 20MB (2GB is too large and dangerous!)
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
 // Updated middleware for multiple images
 const uploadImage = (req, res, next) => {
+  
   upload.array('images')(req, res, async (error) => {
     if (error) {
       return res.status(400).json({ message: "File upload failed", error });
@@ -45,9 +46,10 @@ const uploadImage = (req, res, next) => {
         req.cloudinaryImageUrls = imageUrls; // Set array of URLs
         next();
       } catch (err) {
+        console.log("cloudinary error:",err);
         return res.status(500).json({ message: "Cloudinary upload failed", error: err });
       }
-    } else {
+    } else {  
       next();
     }
   });
