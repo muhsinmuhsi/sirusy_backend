@@ -32,16 +32,9 @@ const allowedOrigins = [
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'dist')));
-
 
 app.use('/api',ProductRoute);
 app.use('/api/admin',adminRoute);
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
 
 async function connectDB() {
     try {

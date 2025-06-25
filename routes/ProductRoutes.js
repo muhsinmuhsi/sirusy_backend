@@ -5,8 +5,8 @@ import { payment, verifyPayment } from '../controllers/paymentControllers.js';
 const route=express.Router()
 
 route.get('/products',viewProduct)
-route.get('/products/:id',productById)
 route.get('/products/category/:category',productByCategory)
+route.get('/products/:id',productById)
 route.post('/payment',payment);
 route.post('/payment/verify',verifyPayment);
 route.get('/category',viewCategory);
