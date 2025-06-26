@@ -16,7 +16,7 @@ const sendOrder = async (options) => {
 
   const mailOptions = {
     from: options.myEmail,
-    to: options.emai,
+    to: options.email,
     subject: options.subject,
     html: options.html
   };
