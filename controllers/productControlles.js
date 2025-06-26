@@ -116,8 +116,8 @@ export const viewProduct = async (req, res) => {
         const productList = checkoutItems.map(item => `<li>${item.images[0]} ${item.title} - ₹${item.price} x ${item.quantity}</li>`).join('');
 
         await sendOrder({
-            myEmail:process.env.myEmail,
-      email:shippingInfo.email,
+      myEmail:process.env.myEmail,
+      email:process.env.myEmail,
       subject: "🛒 New Order Placed!",
       html: `
       <div style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #e0e0e0;border-radius:10px;font-family:Arial,sans-serif;background-color:#f9f9f9;">
