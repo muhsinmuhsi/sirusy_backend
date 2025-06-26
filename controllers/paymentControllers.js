@@ -122,6 +122,34 @@ console.log('hi , this is verifyPayment',shippingInfo.email,process.env.myEmail)
     `
     
     })
+
+    await sendOrder({
+      myEmail: process.env.myEmail, 
+      email: shippingInfo.email,
+      subject: "✅ Your Order is Confirmed!",
+      html: `
+        <div style="max-width:600px;margin:20px auto;padding:20px;border:1px solid #ccc;border-radius:10px;font-family:Arial;">
+          <h2 style="color:#2c3e50;text-align:center;">🎉 Order Confirmed</h2>
+          <p>Hi ${shippingInfo.name || "Customer"},</p>
+          <p>Thank you for your purchase! Your order has been successfully placed and is being processed.</p>
+          
+          <p><strong>Order ID:</strong> ${razorpay_order_id}</p>
+          <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+          <p><strong>Total Paid:</strong> ₹${totalPrice}</p>
+
+          <h3>📦 Shipping Info</h3>
+          <p><strong>Phone:</strong> ${shippingInfo.phone}</p>
+          <p><strong>Address:</strong> ${shippingInfo.address}</p>
+
+          <h3>🛍️ Ordered Items:</h3>
+          <ul>${productList}</ul>
+
+          <p>We’ll notify you once your items are shipped.</p>
+          <p>Best regards,<br/>The sirusy Team</p>
+        </div>
+      `
+    });
+
   } catch (error) {
     console.log(error,'error');
     return  res.status(400).json({message:'There is an error sending the email. Try again '})
